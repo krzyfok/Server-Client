@@ -2,7 +2,7 @@
 #include<winsock2.h>
 #include<ws2tcpip.h>
 
-
+using namespace std;
 int main()
 {
 	WSAData wsaData;
@@ -55,6 +55,7 @@ int main()
 	
 	}
 
+while(true){
 	SOCKET acceptS;
 	acceptS= accept(soc, NULL,NULL);
 
@@ -62,24 +63,33 @@ int main()
 	{
 		printf("ACCEPT - ERROR\n");
 		WSACleanup();
+	
 	}
 	else
 	{
 		printf("ACCEPT - SUCCES\n");
 	}
-	
-	char buffer[200];
-	int bytes = recv(acceptS, buffer, 200, 0);
-	if (bytes < 0)
-	{
-		printf("RECIVE - ERROR\n");
-	}
-	else
-	{
-		printf("RECIVE - SUCCES\n");
-	}
+	while (true) {
+            char buffer[200] = {0};
+            int bytes = recv(acceptS, buffer, sizeof(buffer), 0);
+            if (bytes <= 0) {
+                if (bytes == 0) {
+                    printf("RECIVE - DISCONNECTED\n");
+                } else {
+                    printf("RECIVE - ERROR\n");
+                }
+                break;
+            } else {
+                printf("RECIVE : %s\n", buffer);
+            }
+        }
 
 
+
+
+
+
+}
 	return 0;
 
 

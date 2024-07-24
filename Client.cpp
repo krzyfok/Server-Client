@@ -39,6 +39,7 @@ int main()
 
 	if (connect(c_soc, (SOCKADDR*)&c_service, sizeof(c_service)) == SOCKET_ERROR) {
 		printf("CONNECT - ERROR - %d\n", WSAGetLastError);
+		closesocket(c_soc);
 		WSACleanup();
 		return 1;
 	}
@@ -46,8 +47,9 @@ int main()
 	{
 		printf("CONNECT - SUCCES\n");
 	}
-
-	char buffer[200];
+while(true)
+{
+	char buffer[200]={0};
 
 
 	cin.getline(buffer, 200);
@@ -62,6 +64,9 @@ int main()
 	}
 
 
+
+
+}
 	return 0;
 
 
