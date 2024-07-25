@@ -9,8 +9,6 @@ using namespace std;
 //gui- aktywne połacznia-historia-wiadomosc z serwera do wybranego hosta?-osobny wątek na wysyłanie i odbieranie?
 // sieć lokalna?
 //zapis danych klienta - wiadomosc-data-czas
-//przekazywanie wiadomosci do wszytskich hostów połączonych
-//wątek do nasłuchiwania u hosta 
 void communication(SOCKET socket,vector<SOCKET> &SocketVector);
 
 int main()
