@@ -1,7 +1,8 @@
 #include <iostream>
 #include<winsock2.h>
 #include<ws2tcpip.h>
-
+#include <vector>
+#include <thread>
 using namespace std;
 //
 //funkcja wątki- odieranie tekstu 
@@ -9,8 +10,16 @@ using namespace std;
 //gui- aktywne połacznia-historia-wiadomosc z serwera do wybranego hosta?-osobny wątek na wysyłanie i odbieranie?
 // sieć lokalna?
 //zapis danych klienta - wiadomosc-data-czas
+
+
+void communication(SOCKET soc_client);
+
 int main()
 {
+	std::vector<std::thread> ThreadVector;
+
+
+
 	WSAData wsaData;
 	int wsaDatares= WSAStartup(MAKEWORD(2,2),&wsaData);
 	if (wsaDatares != 0)
@@ -75,9 +84,20 @@ while(true){
 	{
 		printf("ACCEPT - SUCCES\n");
 	}
-	while (true) {
+	ThreadVector.emplace_back([&](){communication(acceptS);});
+
+}
+	
+	closesocket(soc);
+	WSACleanup();
+	return 0;
+}
+
+void communication(SOCKET soc_client)
+{
+while (true) {
             char buffer[200] = {0};
-            int bytes = recv(acceptS, buffer, sizeof(buffer), 0);
+            int bytes = recv(soc_client, buffer, sizeof(buffer), 0);
             if (bytes <= 0) {
                 
                     printf("RECIVE - ERROR\n");
@@ -88,13 +108,5 @@ while(true){
             }
         }
 
-
-
-
-
-
-}
-	return 0;
-
-
+		closesocket(soc_client);
 }
