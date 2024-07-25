@@ -4,20 +4,19 @@
 #include <vector>
 #include <thread>
 using namespace std;
-//
-//funkcja wątki- odieranie tekstu 
-//w pętli nasłuchiwanie i dodawanie nowych wątkow dla klientów
+
+
 //gui- aktywne połacznia-historia-wiadomosc z serwera do wybranego hosta?-osobny wątek na wysyłanie i odbieranie?
 // sieć lokalna?
 //zapis danych klienta - wiadomosc-data-czas
-
-
-void communication(SOCKET soc_client);
+//przekazywanie wiadomosci do wszytskich hostów połączonych
+//wątek do nasłuchiwania u hosta 
+void communication(SOCKET socket,vector<SOCKET> &SocketVector);
 
 int main()
 {
-	std::vector<std::thread> ThreadVector;
-
+	vector<thread> ThreadVector;
+	vector<SOCKET> SocketVector;
 
 
 	WSAData wsaData;
@@ -84,8 +83,9 @@ while(true){
 	{
 		printf("ACCEPT - SUCCES\n");
 	}
-	ThreadVector.emplace_back([&](){communication(acceptS);});
-
+	SocketVector.push_back(acceptS);
+	ThreadVector.emplace_back([&](){communication(acceptS,SocketVector);});
+	
 }
 	
 	closesocket(soc);
@@ -93,20 +93,51 @@ while(true){
 	return 0;
 }
 
-void communication(SOCKET soc_client)
+void communication(SOCKET socket,vector<SOCKET> &SocketVector)
 {
+	string user_name;
+	string separator=" : ";
+char buffer[200] = {0};
+
+int bytes = recv(socket, buffer, sizeof(buffer), 0);
+            if (bytes <= 0) {
+                
+                    printf("USER_NAME - ERROR\n");
+					
+                
+
+            } else {
+                printf("USER_NAME : %s\n", buffer);
+				user_name=buffer;
+				
+            }
+	
 while (true) {
             char buffer[200] = {0};
-            int bytes = recv(soc_client, buffer, sizeof(buffer), 0);
+            int bytes = recv(socket, buffer, sizeof(buffer), 0);
             if (bytes <= 0) {
                 
                     printf("RECIVE - ERROR\n");
                 
                 break;
             } else {
-                printf("RECIVE : %s\n", buffer);
+			
+                printf("%s : %s\n",user_name.c_str(), buffer);
+				
             }
+
+			memmove(buffer +separator.length()+ user_name.length(), buffer, strlen(buffer) + 1);
+			strncpy(buffer,user_name.c_str(),user_name.length());
+			  strncpy(buffer + user_name.length(), separator.c_str(), separator.length());
+			
+		SOCKET s;
+			for(int i=0;i<SocketVector.size();i++)
+			{
+				s=SocketVector[i];
+				if(s!=socket) send(s, buffer, sizeof(buffer), 0);
+			}
+			
         }
 
-		closesocket(soc_client);
+		closesocket(socket);
 }

@@ -1,10 +1,25 @@
 #include <iostream>
 #include<winsock2.h>
 #include<ws2tcpip.h>
-
+#include <conio.h>
+#include<String>
+#include <vector>
+#include <thread>
 using namespace std;
+
+
+void listening(SOCKET socket);
 int main()
-{
+{std::vector<std::thread> ThreadVector;
+	//pobranie nazwy
+	string name;
+	char name_tab[20];
+	cout<<"ENTER NAME:";
+	getline(cin,name);
+	strcpy(name_tab,name.c_str());
+
+	
+
 	WSAData wsaData;
 	int wsaDatares = WSAStartup(MAKEWORD(2, 2), &wsaData);
 	if (wsaDatares != 0)
@@ -47,8 +62,12 @@ int main()
 	{
 		printf("CONNECT - SUCCES\n");
 	}
+	send(c_soc, name_tab, 200, 0);
+	ThreadVector.emplace_back([&](){listening(c_soc);});
 while(true)
 {
+	
+
 	char buffer[200]={0};
 
 
@@ -58,16 +77,32 @@ while(true)
 	{
 		printf("SEND - ERROR\n");
 	}
-	else
-	{
-		printf("SEND - SUCCES\n");
-	}
-
-
-
+	
 
 }
+	closesocket(c_soc);
+	WSACleanup();
 	return 0;
 
 
+}
+
+
+void listening(SOCKET socket)
+{
+while (true) {
+            char buffer[200] = {0};
+            int bytes = recv(socket, buffer, sizeof(buffer), 0);
+            if (bytes <= 0) {
+                
+                    printf("RECIVE - ERROR\n");
+                
+                break;
+            } else {
+			
+                printf("%s\n", buffer);
+				
+            }
+}
+closesocket(socket);
 }
