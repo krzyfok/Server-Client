@@ -3,6 +3,12 @@
 #include<ws2tcpip.h>
 
 using namespace std;
+//
+//funkcja wątki- odieranie tekstu 
+//w pętli nasłuchiwanie i dodawanie nowych wątkow dla klientów
+//gui
+// sieć lokalna?
+//zapis danych klienta - wiadomosc-data-czas
 int main()
 {
 	WSAData wsaData;
@@ -73,11 +79,9 @@ while(true){
             char buffer[200] = {0};
             int bytes = recv(acceptS, buffer, sizeof(buffer), 0);
             if (bytes <= 0) {
-                if (bytes == 0) {
-                    printf("RECIVE - DISCONNECTED\n");
-                } else {
+                
                     printf("RECIVE - ERROR\n");
-                }
+                
                 break;
             } else {
                 printf("RECIVE : %s\n", buffer);
