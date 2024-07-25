@@ -6,7 +6,7 @@ using namespace std;
 //
 //funkcja wątki- odieranie tekstu 
 //w pętli nasłuchiwanie i dodawanie nowych wątkow dla klientów
-//gui
+//gui- aktywne połacznia-historia-wiadomosc z serwera do wybranego hosta?-osobny wątek na wysyłanie i odbieranie?
 // sieć lokalna?
 //zapis danych klienta - wiadomosc-data-czas
 int main()
