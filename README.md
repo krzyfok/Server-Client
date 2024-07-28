@@ -4,5 +4,5 @@ Simple TCP chat created with the Winsock2 library. The server listens for incomi
 
 ## Tech Stack
 
-**C++**
-**Winsock**
+-**C++**
+-**Winsock**
