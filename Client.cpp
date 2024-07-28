@@ -70,7 +70,7 @@ while(true)
 
 	char buffer[200]={0};
 
-
+	
 	cin.getline(buffer, 200);
 	int bytes = send(c_soc, buffer, 200, 0);
 	if (bytes ==SOCKET_ERROR)

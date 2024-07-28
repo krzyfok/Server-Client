@@ -3,14 +3,13 @@
 #include<ws2tcpip.h>
 #include <vector>
 #include <thread>
+#include<iostream>
 using namespace std;
 
 
-//gui- aktywne połacznia-historia-wiadomosc z serwera do wybranego hosta?-osobny wątek na wysyłanie i odbieranie?
-// sieć lokalna?
-//zapis danych klienta - wiadomosc-data-czas
-void communication(SOCKET socket,vector<SOCKET> &SocketVector);
 
+void communication(SOCKET socket,vector<SOCKET> &SocketVector);
+void top();
 int main()
 {
 	vector<thread> ThreadVector;
@@ -61,6 +60,7 @@ int main()
 	if (listen(soc, 1) == SOCKET_ERROR)
 	{
 		printf("LISTENER - ERROR\n");
+		return 0;
 	}
 	else {
 		printf("LISTENER - SUCCES\n");
@@ -79,7 +79,7 @@ while(true){
 	}
 	else
 	{
-		printf("ACCEPT - SUCCES\n");
+		printf("NEW CONNECTION\n");
 	}
 	SocketVector.push_back(acceptS);
 	ThreadVector.emplace_back([&](){communication(acceptS,SocketVector);});
@@ -123,10 +123,9 @@ while (true) {
                 printf("%s : %s\n",user_name.c_str(), buffer);
 				
             }
-
 			memmove(buffer +separator.length()+ user_name.length(), buffer, strlen(buffer) + 1);
 			strncpy(buffer,user_name.c_str(),user_name.length());
-			  strncpy(buffer + user_name.length(), separator.c_str(), separator.length());
+			strncpy(buffer + user_name.length(), separator.c_str(), separator.length());
 			
 		SOCKET s;
 			for(int i=0;i<SocketVector.size();i++)
